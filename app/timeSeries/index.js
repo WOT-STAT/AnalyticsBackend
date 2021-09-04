@@ -14,20 +14,20 @@ router.get('/load',
         const limit = req.query.limit || 30;
 
         const start = knex
-            .distinct('*')
             .from('Event_OnBattleStart')
+            .orderBy('dateTime', 'desc')
             .limit(limit)
-            .as('start')
 
         const result = knex
             .distinct('*')
             .from('Event_OnBattleResult')
-            .limit(limit)
+            .where('onBattleStart_id', 'in', start.clone().select('id'))
+            .orderBy('dateTime', 'desc')
             .as('result')
 
         const r = await Query(
             knex.select('*')
-                .from(start)
+                .from(start.distinct('*').as('start'))
                 .leftJoin(result, { 'start.id': 'result.onBattleStart_id' }))
         res.json(r)
     })
