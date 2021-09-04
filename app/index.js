@@ -3,6 +3,7 @@ import cors from 'cors'
 import config from 'config'
 
 import status from './status/index.js'
+import timeSeries from './timeSeries/index.js'
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.use(cors());
 app.options('*', cors());
 
 app.use('/api/analytics/', status)
+app.use('/api/analytics/timeSeries', timeSeries)
 
 async function Start() {
     const port = config.get('appPort') || 5000
