@@ -50,7 +50,7 @@ router.get('/battleEvents',
         ].map(t => Query(t)))
 
         res.json({
-            onBattleStarat: result[0],
+            onBattleStart: result[0],
             onShot: result[1],
             onBattleResult: result[2]
         })
