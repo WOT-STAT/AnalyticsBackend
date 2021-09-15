@@ -39,12 +39,12 @@ router.get('/battleEvents',
     async (req, res) => {
         const battleId = req.query.battleid
 
-        const onBattleStarat = knex.from('Event_OnBattleStart').where('id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
+        const onBattleStart = knex.from('Event_OnBattleStart').where('id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
         const onShot = knex.from('Event_OnShot').where('onBattleStart_id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
         const onBattleResult = knex.from('Event_OnBattleResult').where('onBattleStart_id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
 
         const result = await Promise.all([
-            onBattleStarat,
+            onBattleStart,
             onShot,
             onBattleResult
         ].map(t => Query(t)))
