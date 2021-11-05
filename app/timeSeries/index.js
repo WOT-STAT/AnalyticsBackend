@@ -51,7 +51,19 @@ router.get('/battleEvents',
 
         res.json({
             onBattleStart: result[0],
-            onShot: result[1],
+            onShot: result[1].map(shot => ({
+                ...shot,
+                results: shot['results.order'].map((order, i) => ({
+                    order,
+                    ammoBayDestroyed: shot['results.ammoBayDestroyed'][i],
+                    fireDamage: shot['results.fireDamage'][i],
+                    fireHealth: shot['results.fireHealth'][i],
+                    flags: shot['results.flags'][i],
+                    shotDamage: shot['results.shotDamage'][i],
+                    shotHealth: shot['results.shotHealth'][i],
+                    tankTag: shot['results.tankTag'][i],
+                }))
+            })),
             onBattleResult: result[2]
         })
     })
