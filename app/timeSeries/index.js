@@ -40,7 +40,7 @@ router.get('/battleEvents',
         const battleId = req.query.battleid
 
         const onBattleStart = knex.from('Event_OnBattleStart').where('id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
-        const onShot = knex.from('Event_OnShot').where('onBattleStart_id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
+        const onShot = knex.from('Event_OnShot').where('onBattleStart_id', '=', battleId).orderBy('dateTime', 'desc').distinct('*').select(knex.raw('toString(hitSegment) as hitSegmentSTR'))
         const onBattleResult = knex.from('Event_OnBattleResult').where('onBattleStart_id', '=', battleId).orderBy('dateTime', 'desc').distinct('*')
 
         const result = await Promise.all([
@@ -49,10 +49,13 @@ router.get('/battleEvents',
             onBattleResult
         ].map(t => Query(t)))
 
+
         res.json({
             onBattleStart: result[0],
             onShot: result[1].map(shot => ({
                 ...shot,
+                hitSegment: shot.hitSegmentSTR,
+                hitSegmentSTR: undefined,
                 results: shot['results.order'].map((order, i) => ({
                     order,
                     ammoBayDestroyed: shot['results.ammoBayDestroyed'][i],
